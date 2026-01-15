@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hackipedia | Home</title>
+  <style>
+    /* --- BLACK & WHITE THEME VARIABLES --- */
+    :root {
+      --bg-color: #000000;
+      --card-bg: #0a0a0a;
+      --text-main: #ffffff;
+      --text-dim: #666666;
+      --border-color: #333333;
+      --focus-color: #ffffff;
+      --font-stack: 'Courier New', Courier, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* --- BACKGROUND ANIMATION --- */
+    #network-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* --- LAYOUT WRAPPER --- */
+    .wrapper {
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      width: 100%;
+    }
+
+    /* --- HEADER --- */
+    header {
+      border-bottom: 2px solid var(--text-main);
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    header a {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    h1 {
+      font-size: 3rem;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      line-height: 1;
+    }
+
+    /* Blinking Cursor Effect */
+    .cursor {
+      display: inline-block;
+      width: 15px;
+      height: 1em;
+      background-color: var(--text-main);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 5px;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    header p {
+      color: var(--text-dim);
+      margin-top: 10px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    /* --- NAVIGATION --- */
+    nav {
+      margin-bottom: 50px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex; /* Horizontal layout */
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--border-color); /* Dashed tech line */
+    }
+
+    nav a {
+      display: inline-block;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 5px 15px;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    /* Bracket effect using borders */
+    nav a {
+        border-left: 1px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
+    }
+
+    nav a:hover {
+      color: var(--bg-color);
+      background-color: var(--text-main);
+      border-color: var(--text-main);
+      transform: translateY(-2px);
+    }
+
+    /* --- CONTENT ARTICLES --- */
+    .content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .article {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 30px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .article h2 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+      display: inline-block;
+    }
+
+    .article p {
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    .article:hover {
+      border-color: var(--text-main);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      margin-top: auto;
+      padding: 40px 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .btn-logout {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: 1px solid var(--text-main);
+        background: transparent;
+        color: var(--text-main);
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    
+    .btn-logout:hover {
+        background: var(--text-main);
+        color: var(--bg-color);
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      nav ul { flex-direction: column; gap: 5px; }
+      nav a { width: 100%; text-align: center; }
+      .content { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Animation -->
+  <canvas id="network-canvas"></canvas>
+
+  <div class="wrapper">
+    <header>
+      <!-- Hackipedia Title is now a clickable link -->
+      <a href="index.html">
+        <h1>Hackipedia<span class="cursor"></span></h1>
+      </a>
+      <p>The Wiki of Ethical Hacking Knowledge</p>
+    </header>
+
+    <nav>
+      <ul>
+        <!-- Home Button Removed -->
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="tutorials.html">Tutorials</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+
+    <div class="content">
+      <div class="article">
+        <h2>What is Ethical Hacking?</h2>
+        <p>Ethical hacking involves the authorized practice of bypassing system security to identify potential data breaches and threats in a network. The company that owns the system or network allows cybersecurity engineers to perform such activities to test the system's defenses.</p>
+      </div>
+
+      <div class="article">
+        <h2>Explore Topics</h2>
+        <p>Start learning about tools, techniques, and tutorials used by ethical hackers worldwide. From network scanning to social engineering, master the skills required to secure infrastructure.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Hackipedia</p>
+    <a href="login.html" class="btn-logout">Logout</a>
+  </footer>
+
+  <script>
+    /* --- COPY OF CANVAS SCRIPT FOR CONSISTENCY --- */
+    const canvas = document.getElementById('network-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    const particleCount = 50;
+    const connectionDistance = 150;
+    const mouseDistance = 200;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const mouse = { x: null, y: null };
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener('mouseleave', () => {
+      mouse.x = null; mouse.y = null;
+    });
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 1;
+        this.vy = (Math.random() - 0.5) * 1;
+        this.size = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x += this.vx; this.y += this.vy;
+        if (this.x < 0 || this.x > width) this.vx *= -1;
+        if (this.y < 0 || this.y > height) this.vy *= -1;
+        if (mouse.x != null) {
+          let dx = mouse.x - this.x, dy = mouse.y - this.y;
+          let dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < mouseDistance) {
+            const force = (mouseDistance - dist) / mouseDistance;
+            this.x -= (dx/dist) * force * 2;
+            this.y -= (dy/dist) * force * 2;
+          }
+        }
+      }
+      draw() {
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+        for (let j = i; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < connectionDistance) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 * (1 - dist/connectionDistance)})`;
+            ctx.lineWidth = 1;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+
+</body>
+</html>
