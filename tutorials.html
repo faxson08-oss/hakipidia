@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hackipedia | Tutorials</title>
+  <style>
+    /* --- BLACK & WHITE THEME VARIABLES --- */
+    :root {
+      --bg-color: #000000;
+      --card-bg: #0a0a0a;
+      --text-main: #ffffff;
+      --text-dim: #666666;
+      --border-color: #333333;
+      --font-stack: 'Courier New', Courier, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* --- BACKGROUND ANIMATION --- */
+    #network-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* --- LAYOUT WRAPPER --- */
+    .wrapper {
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      width: 100%;
+    }
+
+    /* --- HEADER --- */
+    header {
+      border-bottom: 2px solid var(--text-main);
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    header a {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    h1 {
+      font-size: 3rem;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      line-height: 1;
+    }
+
+    /* Blinking Cursor Effect */
+    .cursor {
+      display: inline-block;
+      width: 15px;
+      height: 1em;
+      background-color: var(--text-main);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 5px;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    header p {
+      color: var(--text-dim);
+      margin-top: 10px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    /* --- NAVIGATION --- */
+    nav {
+      margin-bottom: 50px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--border-color);
+    }
+
+    nav a {
+      display: inline-block;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 5px 15px;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      border-left: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+    }
+
+    nav a:hover {
+      color: var(--bg-color);
+      background-color: var(--text-main);
+      border-color: var(--text-main);
+      transform: translateY(-2px);
+    }
+
+    /* --- CONTENT --- */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .tutorial-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 25px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .tutorial-link .name {
+      color: var(--text-main);
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .tutorial-link .desc {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      text-align: right;
+    }
+
+    .tutorial-link:hover {
+      background: var(--text-main);
+      transform: translateX(10px);
+    }
+
+    .tutorial-link:hover .name,
+    .tutorial-link:hover .desc {
+      color: var(--bg-color);
+    }
+    
+    /* Folder Icon Style */
+    .tutorial-link::before {
+      content: "/";
+      color: var(--text-dim);
+      font-weight: bold;
+      margin-right: 15px;
+      font-size: 1.5rem;
+    }
+    
+    .tutorial-link:hover::before {
+        color: var(--bg-color);
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      margin-top: auto;
+      padding: 40px 0;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .btn-logout {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: 1px solid var(--text-main);
+        background: transparent;
+        color: var(--text-main);
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    
+    .btn-logout:hover {
+        background: var(--text-main);
+        color: var(--bg-color);
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 600px) {
+      h1 { font-size: 2rem; }
+      nav ul { flex-direction: column; gap: 5px; }
+      nav a { width: 100%; text-align: center; }
+      .tutorial-link { flex-direction: column; align-items: flex-start; gap: 5px; }
+      .tutorial-link .desc { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Animation -->
+  <canvas id="network-canvas"></canvas>
+
+  <div class="wrapper">
+    <header>
+      <a href="index.html">
+        <h1>Hackipedia<span class="cursor"></span></h1>
+      </a>
+      <p>Tutorials - Select a tool to learn in-depth tutorials</p>
+    </header>
+
+    <nav>
+      <ul>
+        <li><a href="tools.html">Tools</a></li>
+        <li><a href="tutorials.html">Tutorials</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+
+    <div class="content">
+      <a href="nmap/index.html" class="tutorial-link">
+        <span class="name">Nmap</span>
+        <span class="desc">Network Scanner</span>
+      </a>
+      
+      <a href="hydra/index.html" class="tutorial-link">
+        <span class="name">Hydra</span>
+        <span class="desc">Password Brute Forcer</span>
+      </a>
+      
+      <a href="sqlmap/index.html" class="tutorial-link">
+        <span class="name">SQLmap</span>
+        <span class="desc">SQL Injection Tool</span>
+      </a>
+      
+      <a href="wireshark/index.html" class="tutorial-link">
+        <span class="name">Wireshark</span>
+        <span class="desc">Packet Analyzer</span>
+      </a>
+      
+      <a href="links/index.html" class="tutorial-link">
+        <span class="name">Links</span>
+        <span class="desc">External Resources</span>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Hackipedia</p>
+    <a href="login.html" class="btn-logout">Logout</a>
+  </footer>
+
+  <script>
+    /* --- COPY OF CANVAS SCRIPT FOR CONSISTENCY --- */
+    const canvas = document.getElementById('network-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    const particleCount = 50;
+    const connectionDistance = 150;
+    const mouseDistance = 200;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const mouse = { x: null, y: null };
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener('mouseleave', () => {
+      mouse.x = null; mouse.y = null;
+    });
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 1;
+        this.vy = (Math.random() - 0.5) * 1;
+        this.size = Math.random() * 2 + 1;
+      }
+      update() {
+        this.x += this.vx; this.y += this.vy;
+        if (this.x < 0 || this.x > width) this.vx *= -1;
+        if (this.y < 0 || this.y > height) this.vy *= -1;
+        if (mouse.x != null) {
+          let dx = mouse.x - this.x, dy = mouse.y - this.y;
+          let dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < mouseDistance) {
+            const force = (mouseDistance - dist) / mouseDistance;
+            this.x -= (dx/dist) * force * 2;
+            this.y -= (dy/dist) * force * 2;
+          }
+        }
+      }
+      draw() {
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+        for (let j = i; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < connectionDistance) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 * (1 - dist/connectionDistance)})`;
+            ctx.lineWidth = 1;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+
+</body>
+</html>
